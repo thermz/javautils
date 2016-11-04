@@ -1,0 +1,245 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.tilab.ca.sse.ae</groupId>
+    <artifactId>SSEArticleExtractor</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0</version>
+    <name>SSEArticleExtractor</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jersey.version>2.17</jersey.version>
+    </properties>
+
+    <!--    <repositories>
+        <repository>
+            <url>https://oss.sonatype.org/content/repositories/releases/com/syncthemall/</url>
+        </repository>
+    </repositories>-->
+    
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>${jersey.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-grizzly2-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.syncthemall</groupId>
+            <artifactId>boilerpipe</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aeonbits.owner</groupId>
+            <artifactId>owner-java8</artifactId>
+            <version>1.0.6</version>
+        </dependency>
+        <!-- uncomment this to get JSON support:
+         <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.glassfish.grizzly</groupId>
+            <artifactId>grizzly-http-all</artifactId>
+            <version>2.3.16</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>2.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.tilab.ca</groupId>
+            <artifactId>LogIntegration</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.tilab.ca.platform</groupId>
+            <artifactId>LogExecTimeFilter</artifactId>
+            <version>1.0.2</version>
+        </dependency>-->
+        
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.9</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <inherited>true</inherited>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.tilab.ca.ae.Main</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.tilab.ca.ae.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+					<finalName>${project.name}</finalName>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.tilab.ca.ae.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        
+			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <version>2.1.3</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>generate-rpm</id>
+                        <goals>
+                            <goal>rpm</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <group>Application/Internet</group>
+                    <name>articleextractor</name>
+					<release>package</release>
+					<projversion>install</projversion>
+					<mappings>
+                        <mapping>
+                            <directory>/opt/articleextractor</directory>
+                            <filemode>755</filemode>
+                            <username>root</username>
+                            <groupname>root</groupname>
+                            <sources>
+                                <source>
+                                    <location>${basedir}/target/SSEArticleExtractor.jar</location>
+<!--                                    <noDefaultExcludes>true</noDefaultExcludes>
+                                    <excludes>
+                                        <exclude>.git**</exclude>
+                                    </excludes>-->
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/opt/articleextractor</directory>
+                            <filemode>755</filemode>
+                            <username>root</username>
+                            <groupname>root</groupname>
+                            <sources>
+                                <source>
+                                    <location>${basedir}/src/main/config/ae.properties</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                    
+						<mapping>
+                            <directory>/etc/init.d</directory>
+                            <directoryIncluded>false</directoryIncluded>
+							<filemode>755</filemode>
+                            <username>root</username>
+                            <groupname>root</groupname>
+							<!--<configuration>true</configuration>-->
+                            <sources>
+                                <source>
+                                    <location>${basedir}/src/main/bin/sseae.sh</location>
+									<destination>sseae</destination>
+								</source>
+                            </sources>
+                        </mapping>
+					
+					</mappings>
+					
+                    <preinstallScriptlet>
+                        <scriptFile>${basedir}/src/main/bin/sseae_preinstall.sh</scriptFile>
+                    </preinstallScriptlet>
+					<postinstallScriptlet>
+                        <script>/etc/init.d/sseae start</script>
+                    </postinstallScriptlet>
+					<preremoveScriptlet>
+						<script>/etc/init.d/sseae stop</script>
+					</preremoveScriptlet>
+                </configuration>
+            </plugin>
+		</plugins>
+		
+	</build>
+
+</project>
