@@ -3,11 +3,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.tilab.ca.sse.ae</groupId>
-    <artifactId>SSEArticleExtractor</artifactId>
+    <groupId>com.project.ae</groupId>
+    <artifactId>aID</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
-    <name>SSEArticleExtractor</name>
+    <name>aID</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jersey.version>2.17</jersey.version>
@@ -64,18 +64,7 @@
             <artifactId>jersey-container-servlet-core</artifactId>
             <version>2.17</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.tilab.ca</groupId>
-            <artifactId>LogIntegration</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-        <!--<dependency>
-            <groupId>com.tilab.ca.platform</groupId>
-            <artifactId>LogExecTimeFilter</artifactId>
-            <version>1.0.2</version>
-        </dependency>-->
-        
+	    
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -113,7 +102,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.tilab.ca.ae.Main</mainClass>
+                    <mainClass>com.project.Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -123,7 +112,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.tilab.ca.ae.Main</mainClass>
+                            <mainClass>com.project.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -156,7 +145,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.tilab.ca.ae.Main</mainClass>
+                                    <mainClass>com.project.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -179,18 +168,18 @@
                 </executions>
                 <configuration>
                     <group>Application/Internet</group>
-                    <name>articleextractor</name>
-					<release>package</release>
-					<projversion>install</projversion>
-					<mappings>
+                    <name>appName</name>
+		<release>package</release>
+		<projversion>install</projversion>
+		<mappings>
                         <mapping>
-                            <directory>/opt/articleextractor</directory>
+                            <directory>/opt/aid</directory>
                             <filemode>755</filemode>
                             <username>root</username>
                             <groupname>root</groupname>
                             <sources>
                                 <source>
-                                    <location>${basedir}/target/SSEArticleExtractor.jar</location>
+                                    <location>${basedir}/target/aid.jar</location>
 <!--                                    <noDefaultExcludes>true</noDefaultExcludes>
                                     <excludes>
                                         <exclude>.git**</exclude>
@@ -199,7 +188,7 @@
                             </sources>
                         </mapping>
                         <mapping>
-                            <directory>/opt/articleextractor</directory>
+                            <directory>/opt/aid</directory>
                             <filemode>755</filemode>
                             <username>root</username>
                             <groupname>root</groupname>
@@ -219,8 +208,8 @@
 							<!--<configuration>true</configuration>-->
                             <sources>
                                 <source>
-                                    <location>${basedir}/src/main/bin/sseae.sh</location>
-									<destination>sseae</destination>
+                                    <location>${basedir}/src/main/bin/aid.sh</location>
+									<destination>destination</destination>
 								</source>
                             </sources>
                         </mapping>
@@ -228,13 +217,13 @@
 					</mappings>
 					
                     <preinstallScriptlet>
-                        <scriptFile>${basedir}/src/main/bin/sseae_preinstall.sh</scriptFile>
+                        <scriptFile>${basedir}/src/main/bin/aid_preinstall.sh</scriptFile>
                     </preinstallScriptlet>
 					<postinstallScriptlet>
-                        <script>/etc/init.d/sseae start</script>
+                        <script>/etc/init.d/ae start</script>
                     </postinstallScriptlet>
 					<preremoveScriptlet>
-						<script>/etc/init.d/sseae stop</script>
+						<script>/etc/init.d/aid stop</script>
 					</preremoveScriptlet>
                 </configuration>
             </plugin>
