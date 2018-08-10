@@ -28,8 +28,7 @@ import org.apache.log4j.Logger;
 /**
  * Utility wrapper around JSch classes
  * 
- * @author gcaporaletti
- * 
+ * @author 
  */
 public class SshServiceImpl implements SshService, FtpService {
 
